@@ -16,12 +16,21 @@ keys.addEventListener('click', e => {
             } else {
                 display.textContent = displayedNum + keyContent;
             }
-            calculator.dataset.previousKey = "number";
+            calculator.dataset.previousKeyType = "number";
             console.log("Number key!");
         } else {  // action
 
             if (action == "add" || action === "subtract" || action === "multiply" || action === "divide") {
                 key.classList.add("is-depressed");  // saved state
+                const firstValue = calculator.dataset.firstValue;
+                const operator = calculator.dataset.operator;
+                const secondValue = displayedNum;
+
+                if (firstValue && operator) {
+                    display.textContent = calculate(firstValue, operator, secondValue);
+                }
+
+                key.classList.add("is-depressed");
                 calculator.dataset.previousKeyType = "operator";
                 calculator.dataset.firstValue = displayedNum;
                 calculator.dataset.operator = action;
@@ -43,13 +52,16 @@ keys.addEventListener('click', e => {
                 console.log("Clear key!");
 
             } else if (action === "calculate") {
-                const secondValue = displayedNum;
                 const firstValue = calculator.dataset.firstValue;
                 const operator = calculator.dataset.operator;
+                const secondValue = displayedNum;
 
-                display.textContent = calculate(firstValue, operator, secondValue);
-                calculator.dataset.previousKeyType = "calculate";
-                console.log("Equal key!");
+                if (firstValue && operator && previousKeyType != "operator") {
+                    // FLOW: number, operator, number, operator, calculate first before moving to second operator
+                    display.textContent = calculate(firstValue, operator, secondValue);
+                    calculator.dataset.previousKeyType = "calculate";
+                    console.log("Equal key!");
+                }
             }
         }
         Array.from(key.parentNode.children)  // remove .is-depressed class from all keys
