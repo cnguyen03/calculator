@@ -26,17 +26,23 @@ keys.addEventListener('click', e => {
                 const operator = calculator.dataset.operator;
                 const secondValue = displayedNum;
 
-                if (firstValue && operator) {
-                    display.textContent = calculate(firstValue, operator, secondValue);
+                if (firstValue && operator && previousKeyType !== "operator") {
+                    const calcValue = calculate(firstValue, operator, secondValue);
+                    display.textContent = calcValue;
+                    // Update calculated value as firstValue
+                    calculator.dataset.firstValue = calcValue
+                } else {
+                    // If there are no calculations, set displayedNum as the firstValue
+                    calculator.dataset.firstValue = displayedNum
                 }
 
                 key.classList.add("is-depressed");
                 calculator.dataset.previousKeyType = "operator";
-                calculator.dataset.firstValue = displayedNum;
                 calculator.dataset.operator = action;
                 console.log("Operator key!");
 
             } else if (action === "decimal") {
+
                 if (!displayedNum.includes(".")) {
                     display.textContent = displayedNum + ".";
                 }
@@ -56,7 +62,7 @@ keys.addEventListener('click', e => {
                 const operator = calculator.dataset.operator;
                 const secondValue = displayedNum;
 
-                if (firstValue && operator && previousKeyType != "operator") {
+                if (firstValue && operator && previousKeyType !== "operator") {
                     // FLOW: number, operator, number, operator, calculate first before moving to second operator
                     display.textContent = calculate(firstValue, operator, secondValue);
                     calculator.dataset.previousKeyType = "calculate";
