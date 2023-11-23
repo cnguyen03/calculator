@@ -1,0 +1,7 @@
+html {
+    box-sizing: border-box;
+}
+
+.calculator_keys {
+    display: grid;
+}
